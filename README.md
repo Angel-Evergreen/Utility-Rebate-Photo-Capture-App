@@ -1,50 +1,61 @@
-# Welcome to your Expo app 👋
+# PSE Field Photo Capture
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+## Overview
+Internal mobile application to ensure consistent capture and storage of PSE-required project photos.
 
-## Get started
+## Problem Statement
+Current photo capture workflows lead to missing, mislabeled, or delayed documentation, creating compliance and revenue risk.
 
-1. Install dependencies
+## Goals
+- Ensure photos are always tied to the correct job
+- Minimize crew effort
+- Reduce office rework
 
+## Non-Goals
+- Full PSE form submission
+- Customer facing access
+- AI validation (future)
+
+## Users
+- Office staff
+- Field crews
+
+## Success Metrics
+- 100% PSE jobs have compliant photos
+- Zero post-job photo requests
+
+## Development Notes
+This project uses AI-assisted development tools to accelerate implementation.
+All generated code is reviewed, tested, and maintained by the development team.
+
+
+
+
+
+
+
+## Getting Started / Contributor Setup
+
+### Prerequisites
+To run this project locally, contributors need the following installed:
+- **Node.js (LTS)** – https://nodejs.org
+- **Git** – https://git-scm.com
+- **VS Code** (or preferred code editor) – https://code.visualstudio.com
+- **Expo CLI** – install globally with `npm install -g expo-cli`
+- **Expo Go** app on iOS or Android device (for testing)
+
+### Project Setup
+1. Clone the repository:
    ```bash
-   npm install
-   ```
+   git clone https://github.com/YOUR_USERNAME/pse-photo-capture.git
+   cd pse-photo-capture
 
-2. Start the app
+2.Install dependencies:
 
-   ```bash
-   npx expo start
-   ```
+npm install
 
-In the output, you'll find options to open the app in a
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+3.Start the development server:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+npm start
+>>>>>>> 7ed0226b4e4cac4c6825f2f47e454ab2228393a5
