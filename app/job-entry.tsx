@@ -1,50 +1,125 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, StyleSheet, Text } from "react-native";
 
-export default function Page({ route }) {
+const SERVICES = [
+  "Wall Insulation",
+  "Attic Insulation",
+  "Floor Insulation",
+  "Air Sealing",
+  "Vapor Barrier",
+];
+
+export default function JobEntry() {
   const router = useRouter();
-  const crewName = route?.params?.crewName || "";
-  const [projectAddress, setProjectAddress] = useState("");
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+
+  const toggleService = (service: string) => {
+    setSelectedServices((prev) =>
+      prev.includes(service)
+        ? prev.filter((s) => s !== service)
+        : [...prev, service]
+    );
+  };
+
+  const canContinue = selectedServices.length > 0;
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Hello {crewName}</Text>
-      <Text style={styles.subtitle}>Enter Project Address</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Project Address"
-        value={projectAddress}
-        onChangeText={setProjectAddress}
-      />
-      <Button
-        title="Next: Take Photos"
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>Step 1: Select Services</Text>
+      <Text style={styles.subtitle}>
+        Choose all services performed on this job
+      </Text>
+
+      {SERVICES.map((service) => {
+        const selected = selectedServices.includes(service);
+
+        return (
+          <Pressable
+            key={service}
+            onPress={() => toggleService(service)}
+            style={[
+              styles.serviceItem,
+              selected && styles.serviceItemSelected,
+            ]}
+          >
+            <Text
+              style={[
+                styles.serviceText,
+                selected && styles.serviceTextSelected,
+              ]}
+            >
+              {service}
+            </Text>
+          </Pressable>
+        );
+      })}
+
+      <Pressable
+        disabled={!canContinue}
+        style={[
+          styles.nextButton,
+          !canContinue && styles.nextButtonDisabled,
+        ]}
         onPress={() => {
-          if (projectAddress.trim() !== "") {
-            router.push({
-              pathname: "/photo-capture",
-              params: { crewName, projectAddress },
-            });
-          }
+          router.push({
+            pathname: "/service-confirmation",
+            params: { services: JSON.stringify(selectedServices) },
+          });
         }}
-      />
-      <View style={{ height: 10 }} />
-      <Button title="Back" onPress={() => router.push("/")} />
-    </View>
+      >
+        <Text style={styles.nextButtonText}>Continue</Text>
+      </Pressable>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 20 },
-  title: { fontSize: 28, fontWeight: "bold", marginBottom: 10 },
-  subtitle: { fontSize: 20, marginBottom: 20 },
-  input: {
-    width: "100%",
-    height: 50,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    padding: 10,
+  container: {
+    padding: 20,
+    paddingTop: 40,
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: "#666",
     marginBottom: 20,
-    borderRadius: 5,
+  },
+  serviceItem: {
+    padding: 16,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    marginBottom: 12,
+  },
+  serviceItemSelected: {
+    backgroundColor: "#e6f0ff",
+    borderColor: "#3366ff",
+  },
+  serviceText: {
+    fontSize: 16,
+  },
+  serviceTextSelected: {
+    fontWeight: "bold",
+    color: "#3366ff",
+  },
+  nextButton: {
+    marginTop: 30,
+    padding: 16,
+    borderRadius: 10,
+    backgroundColor: "#3366ff",
+    alignItems: "center",
+  },
+  nextButtonDisabled: {
+    backgroundColor: "#aaa",
+  },
+  nextButtonText: {
+    color: "white",
+    fontSize: 18,
+    fontWeight: "bold",
   },
 });

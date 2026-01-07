@@ -1,0 +1,42 @@
+{
+  "program": "PSE",
+  "services": [
+    {
+      "serviceId": "attic_insulation",
+      "label": "Attic Insulation",
+      "requirements": [
+        {
+          "code": "ATTIC_PRE",
+          "label": "Pre-install attic photo",
+          "required": true
+        },
+        {
+          "code": "ATTIC_POST",
+          "label": "Post-install attic photo",
+          "required": true
+        },
+        {
+          "code": "DEPTH_RULER",
+          "label": "Insulation depth ruler photo",
+          "required": true
+        }
+      ]
+    },
+    {
+      "serviceId": "wall_insulation",
+      "label": "Wall Insulation",
+      "requirements": [
+        {
+          "code": "WALL_PRE",
+          "label": "Pre-install wall photo",
+          "required": true
+        },
+        {
+          "code": "WALL_POST",
+          "label": "Post-install wall photo",
+          "required": true
+        }
+      ]
+    }
+  ]
+}
