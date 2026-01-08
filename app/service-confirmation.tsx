@@ -1,51 +1,83 @@
-import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SERVICES, useApp } from '../context/AppContext'; // adjust path if needed
 
-export default function ServiceConfirmation() {
+export default function ServiceConfirmationScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams();
+  const { serviceId } = useLocalSearchParams<{ serviceId: string }>();
+  const { clearServicePhotos } = useApp();
 
-  const services =
-    typeof params.services === "string"
-      ? JSON.parse(params.services)
-      : [];
+  const service = SERVICES.find((s) => s.id === serviceId);
+
+  if (!service) {
+    router.back();
+    return null;
+  }
+
+  const handleCancel = () => {
+    router.back();
+  };
+
+  const handleTakePictures = () => {
+    clearServicePhotos(service.id);
+    router.push(
+      `/photo-capture?serviceId=${service.id}&photoType=main`
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ready to Take Photos?</Text>
+      <View style={styles.content}>
+        <View style={styles.iconContainer}>
+          <Text style={styles.icon}>✔</Text>
+        </View>
 
-      <Text style={styles.subtitle}>
-        You selected the following services:
-      </Text>
+        <Text style={styles.title}>Confirm Service</Text>
 
-      {services.map((service: string) => (
-        <Text key={service} style={styles.serviceItem}>
-          • {service}
+        <View style={styles.serviceCard}>
+          <Text style={styles.serviceName}>{service.name}</Text>
+          <Text style={styles.serviceBadge}>
+            {service.required ? 'Required' : 'Optional'}
+          </Text>
+        </View>
+
+        <Text style={styles.instruction}>
+          Ready to capture photos for this service?
         </Text>
-      ))}
 
-      <View style={styles.buttonRow}>
-        <Pressable
+        {service.id === 'attic-section' ? (
+          <View style={styles.noteCard}>
+            <Text style={styles.noteTitle}>Note:</Text>
+            <Text style={styles.noteText}>
+              This service requires two sets of photos: 5 main photos and ruler photos.
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.noteCard}>
+            <Text style={styles.noteTitle}>Note:</Text>
+            <Text style={styles.noteText}>
+              Please capture 5 clear photos from different angles.
+            </Text>
+          </View>
+        )}
+      </View>
+
+      <View style={styles.footer}>
+        <TouchableOpacity
           style={styles.cancelButton}
-          onPress={() => router.back()}
+          onPress={handleCancel}
         >
-          <Text style={styles.cancelText}>Cancel</Text>
-        </Pressable>
+          <Text style={styles.cancelIcon}>✖</Text>
+          <Text style={styles.cancelButtonText}>Cancel</Text>
+        </TouchableOpacity>
 
-        <Pressable
-          style={styles.primaryButton}
-          onPress={() =>
-            router.push({
-              pathname: "/photo-capture",
-              params: { services: JSON.stringify(services) },
-            })
-          }
+        <TouchableOpacity
+          style={styles.takePicturesButton}
+          onPress={handleTakePictures}
         >
-          <Ionicons name="camera" size={20} color="#fff" />
-          <Text style={styles.primaryText}>Take Pictures</Text>
-        </Pressable>
+          <Text style={styles.cameraIcon}>📷</Text>
+          <Text style={styles.takePicturesButtonText}>Take Pictures</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -54,48 +86,119 @@ export default function ServiceConfirmation() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f8fafc',
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 24,
-    paddingTop: 60,
+  },
+  iconContainer: {
+    marginBottom: 24,
+  },
+  icon: {
+    fontSize: 48,
+    color: '#2563eb',
   },
   title: {
-    fontSize: 28,
-    fontWeight: "bold",
-    marginBottom: 12,
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1e293b',
+    marginBottom: 32,
   },
-  subtitle: {
+  serviceCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#e2e8f0',
+    marginBottom: 24,
+  },
+  serviceName: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1e293b',
+    marginBottom: 8,
+  },
+  serviceBadge: {
+    fontSize: 14,
+    color: '#64748b',
+    fontWeight: '500',
+  },
+  instruction: {
     fontSize: 16,
-    color: "#555",
+    color: '#64748b',
+    textAlign: 'center',
     marginBottom: 16,
   },
-  serviceItem: {
-    fontSize: 16,
-    marginBottom: 6,
+  noteCard: {
+    backgroundColor: '#fef3c7',
+    borderRadius: 12,
+    padding: 16,
+    width: '100%',
+    borderWidth: 1,
+    borderColor: '#fcd34d',
   },
-  buttonRow: {
-    marginTop: 40,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+  noteTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#92400e',
+    marginBottom: 4,
+  },
+  noteText: {
+    fontSize: 14,
+    color: '#78350f',
+    lineHeight: 20,
+  },
+  footer: {
+    flexDirection: 'row',
+    padding: 16,
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#e2e8f0',
+    gap: 12,
   },
   cancelButton: {
-    padding: 14,
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ffffff',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#e2e8f0',
   },
-  cancelText: {
+  cancelIcon: {
+    color: '#64748b',
+    marginRight: 8,
     fontSize: 16,
-    color: "#666",
   },
-  primaryButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#3366ff",
-    paddingVertical: 14,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-  },
-  primaryText: {
-    color: "#fff",
+  cancelButtonText: {
+    color: '#64748b',
     fontSize: 16,
-    fontWeight: "bold",
-    marginLeft: 8,
+    fontWeight: '600',
+  },
+  takePicturesButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#2563eb',
+    padding: 16,
+    borderRadius: 12,
+  },
+  cameraIcon: {
+    color: '#ffffff',
+    marginRight: 8,
+    fontSize: 16,
+  },
+  takePicturesButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
